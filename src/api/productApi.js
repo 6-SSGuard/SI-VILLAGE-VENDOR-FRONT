@@ -26,3 +26,16 @@ export const submitProductImages = async (imageData) => {
     throw error;
   }
 };
+
+// 옵션 데이터를 서버로 전송하는 함수
+export const submitProductOptions = async (optionData) => {
+  try {
+    const response = await axios.post(
+      'http://localhost:8080/api/vendor/product/option',
+      optionData
+    );
+  } catch (error) {
+    console.error('Error submitting product options:', error);
+    throw error;
+  }
+};

@@ -58,7 +58,7 @@ const VendorProductPage = () => {
         <h2 className="text-xl font-semibold text-gray-700 mb-4">
           Product Options
         </h2>
-        <ProductOptionForm />
+        <ProductOptionForm productCode={productCode} />
       </div>
     </div>
   );

@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { submitProductOptions } from '../api/ProductApi';
 
-const ProductOptionForm = () => {
-  const { register, handleSubmit } = useForm();
+const ProductOptionForm = ({ productCode }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [options, setOptions] = useState([
-    { productCode: '', sizeId: '', volume: '', stock: '' },
+    { sizeId: '', volume: '', stock: '', soldOut: false, dangerStock: '' },
   ]);
 
   // 옵션 추가 핸들러
   const addOption = () => {
     setOptions([
       ...options,
-      { productCode: '', sizeId: '', volume: '', stock: '' },
+      { sizeId: '', volume: '', stock: '', soldOut: false, dangerStock: '' },
     ]);
   };
 
@@ -22,9 +27,30 @@ const ProductOptionForm = () => {
   };
 
   // 폼 제출 핸들러
-  const onSubmit = (data) => {
-    console.log('Submitted data:', data);
-    // 제출 시 API 요청을 보내거나 데이터를 처리하는 로직 추가
+  const onSubmit = async (data) => {
+    const optionData = options.map((_, index) => {
+      const { sizeId, volume, stock, soldOut, dangerStock } =
+        data.options[index]; // data에서 options 배열을 참조
+
+      return {
+        sizeId,
+        volume,
+        stock,
+        soldOut,
+        dangerStock,
+        productCode,
+      };
+    });
+
+    console.log('Sending option data:', optionData); // 실제 전송되는 데이터 구조 확인
+
+    try {
+      await submitProductOptions(optionData); // API 요청
+      alert('Product options submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting product options:', error);
+      alert('Failed to submit product options.');
+    }
   };
 
   return (
@@ -33,25 +59,18 @@ const ProductOptionForm = () => {
         <div key={index} className="border p-4 mb-4 rounded-lg bg-gray-100">
           <h3 className="text-lg font-semibold mb-2">Option {index + 1}</h3>
 
-          {/* productCode */}
-          <div className="mb-3">
-            <label className="block text-gray-700">Product Code</label>
-            <input
-              type="text"
-              {...register(`options[${index}].productCode`, { required: true })}
-              placeholder="Enter product code"
-              className="border p-2 w-full rounded-lg"
-            />
-          </div>
-
           {/* sizeId */}
           <div className="mb-3">
             <label className="block text-gray-700">Size ID</label>
             <input
               type="number"
-              {...register(`options[${index}].sizeId`, { required: true })}
+              {...register(`options[${index}].sizeId`)}
               placeholder="Enter size ID"
-              className="border p-2 w-full rounded-lg"
+              className={`border p-2 w-full rounded-lg ${
+                errors?.options?.[index]?.sizeId
+                  ? 'border-red-500'
+                  : 'border-gray-300'
+              }`}
             />
           </div>
 
@@ -62,8 +81,15 @@ const ProductOptionForm = () => {
               type="text"
               {...register(`options[${index}].volume`, { required: true })}
               placeholder="Enter volume"
-              className="border p-2 w-full rounded-lg"
+              className={`border p-2 w-full rounded-lg ${
+                errors?.options?.[index]?.volume
+                  ? 'border-red-500'
+                  : 'border-gray-300'
+              }`}
             />
+            {errors?.options?.[index]?.volume && (
+              <span className="text-red-500">Volume is required</span>
+            )}
           </div>
 
           {/* stock */}
@@ -73,8 +99,46 @@ const ProductOptionForm = () => {
               type="number"
               {...register(`options[${index}].stock`, { required: true })}
               placeholder="Enter stock"
-              className="border p-2 w-full rounded-lg"
+              className={`border p-2 w-full rounded-lg ${
+                errors?.options?.[index]?.stock
+                  ? 'border-red-500'
+                  : 'border-gray-300'
+              }`}
             />
+            {errors?.options?.[index]?.stock && (
+              <span className="text-red-500">Stock is required</span>
+            )}
+          </div>
+
+          {/* soldOut */}
+          <div className="mb-3">
+            <label className="block text-gray-700">Sold Out</label>
+            <input
+              type="checkbox"
+              {...register(`options[${index}].soldOut`)}
+              className="h-5 w-5"
+            />
+          </div>
+
+          {/* dangerStock */}
+          <div className="mb-3">
+            <label className="block text-gray-700">Danger Stock</label>
+            <input
+              type="number"
+              {...register(`options[${index}].dangerStock`, {
+                required: true,
+                valueAsNumber: true,
+              })}
+              placeholder="Enter danger stock"
+              className={`border p-2 w-full rounded-lg ${
+                errors?.options?.[index]?.dangerStock
+                  ? 'border-red-500'
+                  : 'border-gray-300'
+              }`}
+            />
+            {errors?.options?.[index]?.dangerStock && (
+              <span className="text-red-500">Danger stock is required</span>
+            )}
           </div>
 
           {/* 옵션 제거 버튼 */}
@@ -102,7 +166,7 @@ const ProductOptionForm = () => {
         type="submit"
         className="w-full bg-green-500 text-white p-2 rounded-lg mt-4"
       >
-        Submit
+        Submit Options
       </button>
     </form>
   );
