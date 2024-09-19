@@ -1,26 +1,36 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { submitProductImages } from '../api/ProductApi';
 
-const ProductImageUpload = () => {
+const ProductImageUpload = ({ productCode }) => {
   const { register, handleSubmit } = useForm();
   const [images, setImages] = useState([]);
   const [thumbnailIndex, setThumbnailIndex] = useState(null); // 썸네일로 설정된 이미지 인덱스
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    if (!productCode) {
+      alert('Please create a product first.');
+      return;
+    }
+
     if (images.length === 0) {
       alert('Please upload at least one image.');
       return;
     }
 
     const requestData = images.map((image, index) => ({
-      productCode: data.productCode, // 백엔드에서 자동 생성
+      productCode, // productCode는 서버에서 이미 생성된 상태여야 함
       imageUrl: image.url,
       thumbnail: index === thumbnailIndex, // 썸네일 여부
     }));
 
-    console.log('Final request data:', requestData);
-
-    // API 호출 또는 데이터를 백엔드로 전송
+    try {
+      await submitProductImages(requestData);
+      alert('Product images submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting product images:', error);
+      alert('Failed to submit product images.');
+    }
   };
 
   const handleImageUpload = (event) => {

@@ -1,9 +1,17 @@
+import React, { useState } from 'react';
 import CategorySelector from '../components/CategorySelector';
 import ProductForm from '../components/ProductForm';
 import ProductImageUpload from '../components/ProductImageUpload';
-import ProductOptionForm from '../components/ProductOptionForm'; // 옵션 폼 컴포넌트 추가
+import ProductOptionForm from '../components/ProductOptionForm';
+import axios from 'axios';
 
 const VendorProductPage = () => {
+  const [productCode, setProductCode] = useState(null); // productCode 상태 관리
+
+  const handleProductCodeReceived = (code) => {
+    setProductCode(code); // 생성된 productCode 저장
+  };
+
   return (
     <div className="container mx-auto p-6">
       {/* 헤더 */}
@@ -19,25 +27,35 @@ const VendorProductPage = () => {
         <CategorySelector />
       </div>
 
+      {/* 상품 정보 입력 섹션 */}
+      <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">
+          Product Information
+        </h2>
+        <ProductForm onProductCodeReceived={handleProductCodeReceived} />
+      </div>
+
+      {/* productCode가 반환되었을 때 렌더링 */}
+      {productCode && (
+        <div className="mt-6 p-4 bg-green-100 rounded-lg text-green-800 text-center">
+          <p>
+            Product Code: <strong>{productCode}</strong>
+          </p>
+        </div>
+      )}
+
       {/* 이미지 업로드 섹션 */}
       <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">
           Upload Product Images
         </h2>
-        <ProductImageUpload />
-      </div>
-
-      {/* 상품 등록 폼 섹션 */}
-      <div className="p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-xl font-semibold text-gray-700 mb-6">
-          Product Information
-        </h2>
-        <ProductForm />
+        <ProductImageUpload productCode={productCode} />{' '}
+        {/* productCode 전달 */}
       </div>
 
       {/* 옵션 추가 섹션 */}
-      <div className="p-8 bg-white rounded-lg shadow-lg mt-8">
-        <h2 className="text-xl font-semibold text-gray-700 mb-6">
+      <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">
           Product Options
         </h2>
         <ProductOptionForm />

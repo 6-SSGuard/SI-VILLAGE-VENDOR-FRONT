@@ -1,21 +1,28 @@
 import { useForm } from 'react-hook-form';
 import { submitProductData } from '../api/ProductApi';
+import { useState } from 'react';
 
-const ProductForm = () => {
+const ProductForm = ({ onProductCodeReceived }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    submitProductData(data)
-      .then(() => {
-        alert('Product submitted successfully!');
-      })
-      .catch((error) => {
-        console.error('Error submitting product:', error);
-      });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const productCode = await submitProductData(data); // 서버에서 받은 productCode
+      alert('Product submitted successfully!');
+      console.log('Product Code:', productCode);
+      onProductCodeReceived(productCode); // productCode를 상위 컴포넌트에 전달
+    } catch (error) {
+      console.error('Error submitting product:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -36,123 +43,65 @@ const ProductForm = () => {
         )}
       </div>
 
-      {/* Vendor Name */}
+      {/* Price */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Vendor Name</label>
+        <label className="mb-1 font-medium">Price</label>
         <input
-          type="text"
-          placeholder="Enter vendor name"
-          {...register('vendorName', { required: true })}
+          type="number"
+          placeholder="Enter price"
+          {...register('price', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.vendorName ? 'border-red-500' : 'border-gray-300'
+            errors.price ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.vendorName && (
+        {errors.price && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
 
-      {/* Main View */}
+      {/* Brand ID */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Main View</label>
-        <input type="checkbox" {...register('mainView')} className="h-5 w-5" />
-      </div>
-
-      {/* New Product */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium">New Product</label>
-        <input
-          type="checkbox"
-          {...register('newProduct')}
-          className="h-5 w-5"
-        />
-      </div>
-
-      {/* Display */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium">Display</label>
-        <input type="checkbox" {...register('display')} className="h-5 w-5" />
-      </div>
-
-      {/* Max Order Count */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium">Max Order Count</label>
+        <label className="mb-1 font-medium">Brand ID</label>
         <input
           type="number"
-          placeholder="Enter max order count"
-          {...register('maxOrderCount', { required: true })}
+          placeholder="Enter brand ID"
+          {...register('brandId', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.maxOrderCount ? 'border-red-500' : 'border-gray-300'
+            errors.brandId ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.maxOrderCount && (
+        {errors.brandId && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
 
-      {/* Min Order Count */}
+      {/* Detail Content */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Min Order Count</label>
-        <input
-          type="number"
-          placeholder="Enter min order count"
-          {...register('minOrderCount', { required: true })}
+        <label className="mb-1 font-medium">Detail Content</label>
+        <textarea
+          placeholder="Enter detail content"
+          {...register('detailContent', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.minOrderCount ? 'border-red-500' : 'border-gray-300'
+            errors.detailContent ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.minOrderCount && (
+        {errors.detailContent && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
 
-      {/* Discount Rate */}
+      {/* Color ID */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Discount Rate (%)</label>
+        <label className="mb-1 font-medium">Color ID</label>
         <input
           type="number"
-          step="0.01"
-          placeholder="Enter discount rate"
-          {...register('discountRate', { required: true })}
+          placeholder="Enter color ID"
+          {...register('colorId', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.discountRate ? 'border-red-500' : 'border-gray-300'
+            errors.colorId ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.discountRate && (
-          <span className="text-red-500 mt-1">This field is required</span>
-        )}
-      </div>
-
-      {/* Purchase Price */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium">Purchase Price</label>
-        <input
-          type="number"
-          step="0.01"
-          placeholder="Enter purchase price"
-          {...register('purchasePrice', { required: true })}
-          className={`border p-2 rounded-md ${
-            errors.purchasePrice ? 'border-red-500' : 'border-gray-300'
-          }`}
-        />
-        {errors.purchasePrice && (
-          <span className="text-red-500 mt-1">This field is required</span>
-        )}
-      </div>
-
-      {/* Selling Price */}
-      <div className="flex flex-col">
-        <label className="mb-1 font-medium">Selling Price</label>
-        <input
-          type="number"
-          step="0.01"
-          placeholder="Enter selling price"
-          {...register('sellingPrice', { required: true })}
-          className={`border p-2 rounded-md ${
-            errors.sellingPrice ? 'border-red-500' : 'border-gray-300'
-          }`}
-        />
-        {errors.sellingPrice && (
+        {errors.colorId && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
