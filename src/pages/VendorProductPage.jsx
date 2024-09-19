@@ -1,6 +1,7 @@
 import CategorySelector from '../components/CategorySelector';
 import ProductForm from '../components/ProductForm';
 import ProductImageUpload from '../components/ProductImageUpload';
+import ProductOptionForm from '../components/ProductOptionForm'; // 옵션 폼 컴포넌트 추가
 
 const VendorProductPage = () => {
   return (
@@ -32,6 +33,14 @@ const VendorProductPage = () => {
           Product Information
         </h2>
         <ProductForm />
+      </div>
+
+      {/* 옵션 추가 섹션 */}
+      <div className="p-8 bg-white rounded-lg shadow-lg mt-8">
+        <h2 className="text-xl font-semibold text-gray-700 mb-6">
+          Product Options
+        </h2>
+        <ProductOptionForm />
       </div>
     </div>
   );
