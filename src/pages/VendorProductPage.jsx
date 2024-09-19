@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CategorySelector from '../components/CategorySelector';
 import ProductForm from '../components/ProductForm';
 import ProductImageUpload from '../components/ProductImageUpload';
 import ProductOptionForm from '../components/ProductOptionForm';
-import axios from 'axios';
 
 const VendorProductPage = () => {
   const [productCode, setProductCode] = useState(null); // productCode 상태 관리
@@ -18,14 +17,6 @@ const VendorProductPage = () => {
       <h1 className="text-3xl font-extrabold text-gray-900 mb-10 text-center">
         Vendor Product Registration
       </h1>
-
-      {/* 카테고리 선택 섹션 */}
-      <div className="mb-8 p-6 bg-gray-100 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">
-          Select Category
-        </h2>
-        <CategorySelector />
-      </div>
 
       {/* 상품 정보 입력 섹션 */}
       <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
@@ -43,6 +34,14 @@ const VendorProductPage = () => {
           </p>
         </div>
       )}
+
+      {/* 카테고리 선택 섹션 */}
+      <div className="mb-8 p-6 bg-gray-100 rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">
+          Select Category
+        </h2>
+        <CategorySelector productCode={productCode} />
+      </div>
 
       {/* 이미지 업로드 섹션 */}
       <div className="mb-8 p-6 bg-white rounded-lg shadow-md">

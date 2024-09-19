@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { submitProductOptions } from '../api/ProductApi';
+import { submitProductOptions } from '../api/productApi';
 
 const ProductOptionForm = ({ productCode }) => {
   const {

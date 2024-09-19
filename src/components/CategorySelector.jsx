@@ -1,30 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchCategories, submitProductCategories } from '../api/productApi'; // 분리된 로직 import
 
-const CategorySelector = () => {
+const CategorySelector = ({ productCode }) => {
   const [categories, setCategories] = useState({});
   const [selectedCategories, setSelectedCategories] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchCategories('top');
+    loadCategories('top');
   }, []);
 
-  const fetchCategories = async (parentCategoryCode) => {
+  const loadCategories = async (parentCategoryCode) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/category/sub-categories`,
-        {
-          params: { parentCategoryCode },
-        }
-      );
-      const newCategories = response.data.result;
-      console.log('Fetched categories:', newCategories);
+      const newCategories = await fetchCategories(parentCategoryCode);
       setCategories((prev) => ({
         ...prev,
         [parentCategoryCode]: newCategories,
       }));
     } catch (error) {
-      console.error('Failed to fetch categories', error);
+      console.error('Failed to load categories', error);
     }
   };
 
@@ -34,7 +28,6 @@ const CategorySelector = () => {
     const selectedCategory = categories[levelKey]?.find(
       (category) => category.categoryCode === categoryCode
     );
-    console.log('Selected category:', selectedCategory);
     if (!selectedCategory) return;
 
     setSelectedCategories((prev) => {
@@ -48,7 +41,20 @@ const CategorySelector = () => {
       return newSelected;
     });
 
-    await fetchCategories(categoryCode);
+    await loadCategories(categoryCode);
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    try {
+      await submitProductCategories(selectedCategories, productCode); // API 호출
+    } catch (error) {
+      alert('Failed to map product to categories.');
+      console.error('Error submitting product categories:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const levels = [0, 1, 2, 3];
@@ -94,6 +100,14 @@ const CategorySelector = () => {
             </div>
           );
         })}
+
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-green-500 text-white p-2 rounded-lg mt-4"
+          disabled={loading}
+        >
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
       </div>
     </div>
   );
