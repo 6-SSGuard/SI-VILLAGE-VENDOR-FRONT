@@ -19,14 +19,10 @@ const ProductForm = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-lg mx-auto space-y-6 p-4 border rounded-lg shadow-md"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* Product Name */}
       <div className="flex flex-col">
-        <label htmlFor="productName" className="mb-1 font-medium">
-          Product Name
-        </label>
+        <label className="mb-1 font-medium">Product Name</label>
         <input
           type="text"
           placeholder="Enter product name"
@@ -40,61 +36,123 @@ const ProductForm = () => {
         )}
       </div>
 
+      {/* Vendor Name */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Price</label>
+        <label className="mb-1 font-medium">Vendor Name</label>
         <input
-          type="number"
-          placeholder="Enter product price"
-          {...register('price', { required: true })}
+          type="text"
+          placeholder="Enter vendor name"
+          {...register('vendorName', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.price ? 'border-red-500' : 'border-gray-300'
+            errors.vendorName ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.price && (
+        {errors.vendorName && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
 
+      {/* Main View */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Brand ID</label>
+        <label className="mb-1 font-medium">Main View</label>
+        <input type="checkbox" {...register('mainView')} className="h-5 w-5" />
+      </div>
+
+      {/* New Product */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium">New Product</label>
+        <input
+          type="checkbox"
+          {...register('newProduct')}
+          className="h-5 w-5"
+        />
+      </div>
+
+      {/* Display */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium">Display</label>
+        <input type="checkbox" {...register('display')} className="h-5 w-5" />
+      </div>
+
+      {/* Max Order Count */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium">Max Order Count</label>
         <input
           type="number"
-          placeholder="Enter brand ID"
-          {...register('brandId', { required: true })}
+          placeholder="Enter max order count"
+          {...register('maxOrderCount', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.brandId ? 'border-red-500' : 'border-gray-300'
+            errors.maxOrderCount ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.brandId && (
+        {errors.maxOrderCount && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
 
+      {/* Min Order Count */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Detail Content</label>
-        <textarea
-          placeholder="Enter detail content"
-          {...register('detailContent', { required: true })}
+        <label className="mb-1 font-medium">Min Order Count</label>
+        <input
+          type="number"
+          placeholder="Enter min order count"
+          {...register('minOrderCount', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.detailContent ? 'border-red-500' : 'border-gray-300'
+            errors.minOrderCount ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.detailContent && (
+        {errors.minOrderCount && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
 
+      {/* Discount Rate */}
       <div className="flex flex-col">
-        <label className="mb-1 font-medium">Color ID</label>
+        <label className="mb-1 font-medium">Discount Rate (%)</label>
         <input
           type="number"
-          placeholder="Enter color ID"
-          {...register('colorId', { required: true })}
+          step="0.01"
+          placeholder="Enter discount rate"
+          {...register('discountRate', { required: true })}
           className={`border p-2 rounded-md ${
-            errors.colorId ? 'border-red-500' : 'border-gray-300'
+            errors.discountRate ? 'border-red-500' : 'border-gray-300'
           }`}
         />
-        {errors.colorId && (
+        {errors.discountRate && (
+          <span className="text-red-500 mt-1">This field is required</span>
+        )}
+      </div>
+
+      {/* Purchase Price */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium">Purchase Price</label>
+        <input
+          type="number"
+          step="0.01"
+          placeholder="Enter purchase price"
+          {...register('purchasePrice', { required: true })}
+          className={`border p-2 rounded-md ${
+            errors.purchasePrice ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+        {errors.purchasePrice && (
+          <span className="text-red-500 mt-1">This field is required</span>
+        )}
+      </div>
+
+      {/* Selling Price */}
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium">Selling Price</label>
+        <input
+          type="number"
+          step="0.01"
+          placeholder="Enter selling price"
+          {...register('sellingPrice', { required: true })}
+          className={`border p-2 rounded-md ${
+            errors.sellingPrice ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+        {errors.sellingPrice && (
           <span className="text-red-500 mt-1">This field is required</span>
         )}
       </div>
